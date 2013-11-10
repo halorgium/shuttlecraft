@@ -65,6 +65,18 @@ class Shuttlecraft
       end
     end
 
+    def take(tuple, sec = nil, &block)
+      tuplespace.take(tuple, sec, &block)
+    end
+
+    def read(tuple, sec = nil)
+      tuplespace.read(tuple, sec)
+    end
+
+    def write(tuple, sec = nil)
+      tuplespace.write(tuple, sec)
+    end
+
     private
 
     def read_registered_services

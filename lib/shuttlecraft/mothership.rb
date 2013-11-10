@@ -14,6 +14,7 @@ class Shuttlecraft::Mothership
 
     @protocol = opts[:protocol] || Shuttlecraft::Protocol.default
     @name = opts[:name] || @protocol.name
+    @owner = opts[:owner] || DefaultOwner.new
     @verbose = opts[:verbose] || false
 
     @ts = Rinda::TupleSpace.new
@@ -29,11 +30,10 @@ class Shuttlecraft::Mothership
     notify_on_write
   end
 
-
-  ##
-  # Override this method to add custom registration restrictions
-  def allow_registration?
-    true
+  class DefaultOwner
+    def allow_registration?
+      true
+    end
   end
 
   def notify_on_registration
@@ -41,7 +41,7 @@ class Shuttlecraft::Mothership
     Thread.new do
       @registration_observer.each do |reg|
         puts "Recieved registration from #{reg[1][1]}" if @verbose
-        if allow_registration?
+        if @owner.allow_registration?
           update!
           send(:on_registration) if respond_to? :on_registration
         else
